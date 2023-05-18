@@ -1,3 +1,6 @@
+# Welcome to SWEAT MMA GYM!
+This website is designed to help you achieve proper mechanics in working out and provide you with extensive workouts. 
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
