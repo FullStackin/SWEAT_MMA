@@ -6,50 +6,46 @@ import { exerciseOptions, fetchData } from "../utils/fetchData";
 import ExerciseCard from "./ExerciseCard";
 import Loader from "./Loader";
 
-const EXERCISES_PER_PAGE = 6;
-
 const Exercises = ({ exercises, setExercises, bodyPart }) => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [exercisesPerPage] = useState(6);
 
   useEffect(() => {
     const fetchExercisesData = async () => {
-      let { response, data } = [];
+      let exercisesData = [];
 
       if (bodyPart === "all") {
-        ({ response, data } = await fetchData(
+        exercisesData = await fetchData(
           "https://exercisedb.p.rapidapi.com/exercises",
           exerciseOptions
-        ));
+        );
       } else {
-        ({ response, data } = await fetchData(
+        exercisesData = await fetchData(
           `https://exercisedb.p.rapidapi.com/exercises/bodyPart/${bodyPart}`,
           exerciseOptions
-        ));
+        );
       }
 
-      console.log("API response:", response); // Log the response
-
-      setExercises(data);
+      setExercises(exercisesData);
     };
 
     fetchExercisesData();
-  }, [bodyPart, setExercises]);
+  }, [bodyPart]);
 
-  const lastExerciseIndex = currentPage * EXERCISES_PER_PAGE;
-  const firstExerciseIndex = lastExerciseIndex - EXERCISES_PER_PAGE;
+  // Pagination
+  const indexOfLastExercise = currentPage * exercisesPerPage;
+  const indexOfFirstExercise = indexOfLastExercise - exercisesPerPage;
   const currentExercises = Array.isArray(exercises)
-    ? exercises.slice(firstExerciseIndex, lastExerciseIndex)
+    ? exercises.slice(indexOfFirstExercise, indexOfLastExercise)
     : [];
 
-  const handlePaginate = (event, value) => {
+  const paginate = (event, value) => {
     setCurrentPage(value);
 
     window.scrollTo({ top: 1800, behavior: "smooth" });
   };
 
-  if (!currentExercises.length) {
-    return <Loader />;
-  }
+  if (!currentExercises.length) return <Loader />;
 
   return (
     <Box id="exercises" sx={{ mt: { lg: "109px" } }} mt="50px" p="20px">
@@ -67,19 +63,19 @@ const Exercises = ({ exercises, setExercises, bodyPart }) => {
         flexWrap="wrap"
         justifyContent="center"
       >
-        {currentExercises.map((exercise, index) => (
-          <ExerciseCard key={index} exercise={exercise} />
+        {currentExercises.map((exercise, idx) => (
+          <ExerciseCard key={idx} exercise={exercise} />
         ))}
       </Stack>
       <Stack sx={{ mt: { lg: "114px", xs: "70px" } }} alignItems="center">
-        {exercises.length > EXERCISES_PER_PAGE && (
+        {exercises.length > 9 && (
           <Pagination
             color="standard"
             shape="rounded"
             defaultPage={1}
-            count={Math.ceil(exercises.length / EXERCISES_PER_PAGE)}
+            count={Math.ceil(exercises.length / exercisesPerPage)}
             page={currentPage}
-            onChange={handlePaginate}
+            onChange={paginate}
             size="large"
           />
         )}

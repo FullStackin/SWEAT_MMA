@@ -9,23 +9,29 @@ export const exerciseOptions = {
 export const youtubeOptions = {
   method: "GET",
   headers: {
-    "X-RapidAPI-Host": "youtube-search-and-download.p.rapidapi.com",
     "X-RapidAPI-Key": process.env.REACT_APP_YOUTUBE_API_KEY,
+    "X-RapidAPI-Host": "youtube-search-and-download.p.rapidapi.com",
   },
 };
 
+let makeApiCalls = false; // Flag to control API calls
+
 export async function fetchData(url, options) {
   try {
-    const response = await fetch(url, options);
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(`Error ${response.status}: ${response.statusText}`);
+    if (!makeApiCalls) {
+      return { res: null, data: [] };
     }
 
-    return { response, data };
+    const res = await fetch(url, options);
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(`Error ${res.status}: ${res.statusText}`);
+    }
+
+    return { res, data };
   } catch (error) {
     console.error("Error fetching data:", error);
-    return { response: null, data: [] };
+    return { res: null, data: [] };
   }
 }

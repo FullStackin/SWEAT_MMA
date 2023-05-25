@@ -1,14 +1,10 @@
-// Import necessary dependencies
-
 import React, { useEffect, useState } from "react";
 import { Box, Button, Stack, TextField, Typography } from "@mui/material";
 
 import { exerciseOptions, fetchData } from "../utils/fetchData";
 import HorizontalScrollbar from "./HorizontalScrollbar";
 
-// Define functional component
 const SearchExercises = ({ setExercises, bodyPart, setBodyPart }) => {
-  // Define state variables
   const [search, setSearch] = useState("");
   const [bodyParts, setBodyParts] = useState([]);
 
@@ -20,11 +16,11 @@ const SearchExercises = ({ setExercises, bodyPart, setBodyPart }) => {
         exerciseOptions
       );
 
-      // Set body parts state with fetched data
+      // Setting body parts state with fetched data
       setBodyParts(["all", ...bodyPartsData]);
     };
 
-    // Call fetchBodyPartsData function on mount
+    // Calling fetchBodyPartsData function on mount
     fetchBodyPartsData();
   }, []);
 
