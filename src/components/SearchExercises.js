@@ -8,47 +8,48 @@ const SearchExercises = ({ setExercises, bodyPart, setBodyPart }) => {
   const [search, setSearch] = useState("");
   const [bodyParts, setBodyParts] = useState([]);
 
-  // Fetch body part data on mount
   useEffect(() => {
     const fetchBodyPartsData = async () => {
-      const bodyPartsData = await fetchData(
-        "https://exercisedb.p.rapidapi.com/exercises/bodyPartList",
-        exerciseOptions
-      );
+      try {
+        const bodyPartsData = await fetchData(
+          "https://exercisedb.p.rapidapi.com/exercises/bodyPartList",
+          exerciseOptions
+        );
 
-      // Setting body parts state with fetched data
-      setBodyParts(["all", ...bodyPartsData]);
+        if (Array.isArray(bodyPartsData)) {
+          setBodyParts(["all", ...bodyPartsData]);
+        }
+      } catch (error) {
+        console.error("Error fetching body part data:", error);
+      }
     };
 
-    // Calling fetchBodyPartsData function on mount
     fetchBodyPartsData();
   }, []);
 
-  // Handle search functionality
   const handleSearch = async () => {
-    // Check if search input has a value
     if (search) {
-      // Fetch exercises data
-      const exercisesData = await fetchData(
-        "https://exercisedb.p.rapidapi.com/exercises",
-        exerciseOptions
-      );
+      try {
+        const exercisesData = await fetchData(
+          "https://exercisedb.p.rapidapi.com/exercises",
+          exerciseOptions
+        );
 
-      // Filter exercises based on search input
-      const searchedExercises = exercisesData.filter(
-        (item) =>
-          item.name.toLowerCase().includes(search) ||
-          item.target.toLowerCase().includes(search) ||
-          item.equipment.toLowerCase().includes(search) ||
-          item.bodyPart.toLowerCase().includes(search)
-      );
+        const searchedExercises = exercisesData.filter(
+          (item) =>
+            item.name.toLowerCase().includes(search) ||
+            item.target.toLowerCase().includes(search) ||
+            item.equipment.toLowerCase().includes(search) ||
+            item.bodyPart.toLowerCase().includes(search)
+        );
 
-      // Scroll to exercises section on page
-      window.scrollTo({ top: 1800, left: 100, behavior: "smooth" });
+        window.scrollTo({ top: 1800, left: 100, behavior: "smooth" });
 
-      // Clear search input and set exercises state with filtered exercises
-      setSearch("");
-      setExercises(searchedExercises);
+        setSearch("");
+        setExercises(searchedExercises);
+      } catch (error) {
+        console.error("Error fetching exercises data:", error);
+      }
     }
   };
 
