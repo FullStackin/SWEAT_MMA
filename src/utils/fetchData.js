@@ -14,24 +14,10 @@ export const youtubeOptions = {
   },
 };
 
-let makeApiCalls = false; // Flag to control API calls
+export const fetchData = async (url, options) => {
+  const res = await fetch(url, options);
+  const data = await res.json();
 
-export async function fetchData(url, options) {
-  try {
-    if (!makeApiCalls) {
-      return { res: null, data: [] };
-    }
+  return data;
+};
 
-    const res = await fetch(url, options);
-    const data = await res.json();
-
-    if (!res.ok) {
-      throw new Error(`Error ${res.status}: ${res.statusText}`);
-    }
-
-    return { res, data };
-  } catch (error) {
-    console.error("Error fetching data:", error);
-    return { res: null, data: [] };
-  }
-}

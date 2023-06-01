@@ -17,40 +17,44 @@ const ExerciseDetail = () => {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
 
-    const fetchExercisesData = async () => {
+    const handleFetchData = async () => {
       const exerciseDbUrl = "https://exercisedb.p.rapidapi.com";
       const youtubeSearchUrl =
         "https://youtube-search-and-download.p.rapidapi.com";
 
-      const exerciseDetailData = await fetchData(
-        `${exerciseDbUrl}/exercises/exercise/${id}`,
-        exerciseOptions
-      );
-      setExerciseDetail(exerciseDetailData);
+      try {
+        const exerciseDetailData = await fetchData(
+          `${exerciseDbUrl}/exercises/exercise/${id}`,
+          exerciseOptions
+        );
+        setExerciseDetail(exerciseDetailData);
 
-      const exerciseVideosData = await fetchData(
-        `${youtubeSearchUrl}/search?query=${exerciseDetailData.name} exercise`,
-        youtubeOptions
-      );
-      setExerciseVideos(exerciseVideosData.contents);
+        const exerciseVideosData = await fetchData(
+          `${youtubeSearchUrl}/search?query=${exerciseDetailData.name} exercise`,
+          youtubeOptions
+        );
+        setExerciseVideos(exerciseVideosData.contents);
 
-      const targetMuscleExercisesData = await fetchData(
-        `${exerciseDbUrl}/exercises/target/${exerciseDetailData.target}`,
-        exerciseOptions
-      );
-      setTargetMuscleExercises(targetMuscleExercisesData);
+        const targetMuscleExercisesData = await fetchData(
+          `${exerciseDbUrl}/exercises/target/${exerciseDetailData.target}`,
+          exerciseOptions
+        );
+        setTargetMuscleExercises(targetMuscleExercisesData);
 
-      const equimentExercisesData = await fetchData(
-        `${exerciseDbUrl}/exercises/equipment/${exerciseDetailData.equipment}`,
-        exerciseOptions
-      );
-      setEquipmentExercises(equimentExercisesData);
+        const equipmentExercisesData = await fetchData(
+          `${exerciseDbUrl}/exercises/equipment/${exerciseDetailData.equipment}`,
+          exerciseOptions
+        );
+        setEquipmentExercises(equipmentExercisesData);
+      } catch (error) {
+        // Handle the error here, e.g. show an error message or fallback content
+        console.error("Error fetching exercise data:", error);
+        // You can also set state variables to indicate the error state
+        // For example: setError(true);
+      }
     };
-
-    fetchExercisesData();
+    handleFetchData();
   }, [id]);
-
-  if (!exerciseDetail) return <div>No Data</div>;
 
   return (
     <Box sx={{ mt: { lg: "96px", xs: "60px" } }}>

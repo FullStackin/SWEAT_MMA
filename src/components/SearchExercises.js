@@ -53,6 +53,26 @@ const SearchExercises = ({ setExercises, bodyPart, setBodyPart }) => {
     }
   };
 
+  const handleFetchBodyPartData = async () => {
+    try {
+      const bodyPartsData = await fetchData(
+        "https://exercisedb.p.rapidapi.com/exercises/bodyPartList",
+        exerciseOptions
+      );
+
+      if (Array.isArray(bodyPartsData)) {
+        setBodyParts(["all", ...bodyPartsData]);
+      }
+    } catch (error) {
+      console.error("Error fetching body part data:", error);
+    }
+  };
+
+  const handleBodyPartClick = (part) => {
+    setBodyPart(part);
+    handleFetchBodyPartData();
+  };
+
   return (
     <Stack alignItems="center" mt="10px" justifyContent="center" p="2px">
       <Typography
@@ -99,7 +119,7 @@ const SearchExercises = ({ setExercises, bodyPart, setBodyPart }) => {
         <HorizontalScrollbar
           data={bodyParts}
           bodyParts
-          setBodyPart={setBodyPart}
+          setBodyPart={handleBodyPartClick}
           bodyPart={bodyPart}
         />
       </Box>
