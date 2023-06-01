@@ -47,10 +47,7 @@ const ExerciseDetail = () => {
         );
         setEquipmentExercises(equipmentExercisesData);
       } catch (error) {
-        // Handle the error here, e.g. show an error message or fallback content
         console.error("Error fetching exercise data:", error);
-        // You can also set state variables to indicate the error state
-        // For example: setError(true);
       }
     };
     handleFetchData();
